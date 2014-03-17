@@ -2,6 +2,7 @@
 #include <actionlib/client/simple_action_client.h>
 #include <actionlib/client/terminal_state.h>
 #include <move_base_msgs/MoveBaseAction.h>
+#include <map_mux/ChangeMap.h>
 
 int main(int argc, char ** argv){
     const float a = sqrt(2);
@@ -42,6 +43,7 @@ int main(int argc, char ** argv){
     outsideElevPoseFloor2.pose.orientation.w = a;
 
      ros::init( argc, argv, "move_robot");
+     ros::NodeHandle n;
 
     boost::shared_ptr<actionlib::SimpleActionClient<move_base_msgs::MoveBaseAction> > robot_controller_;
 
@@ -58,7 +60,16 @@ int main(int argc, char ** argv){
    goal.target_pose = insideElevPose;
    robot_controller_->sendGoal(goal);
    robot_controller_->waitForResult();
-// switch map
+// 1) Wait for user input as to what floor I am on
+// 2) switch map
+    ros::ServiceClient client = n.serviceClient<map_mux::ChangeMap>("change_map");
+    map_mux::ChangeMap srv ;
+    srv.request.data = 2;
+    if (client.call(srv)){
+    }
+    else{
+        ROS_ERROR("service ChangeMap change_map failed");
+    }
 
 //give outside pose again
    goal.target_pose = outsideElevPoseFloor2;
@@ -78,28 +89,3 @@ int main(int argc, char ** argv){
 // 7) Catch problem
 //
 
-//        ros::init( argc, argv, "test_fibonacci");
-//
-//        actionlib::SimpleActionClient<learning_actionlib::FibonacciAction> ac("fibonacci", true);
-//
-//        ROS_INFO("wating");
-//        ac.waitForServer();
-//
-//        learning_actionlib::FibonacciGoal goal;
-//        goal.order = 20;
-//        ac.sendGoal(goal);
-//
-//        bool finishedInTime = ac.waitForResult( ros::Duration(22.0));
-//
-//        if(finishedInTime){
-//            actionlib::SimpleClientGoalState state = ac.getState();
-//            //learning_actionlib::FibonacciResult 
-//            std::vector<int> path = ac.getResult()->sequence;
-//            //ROS_INIFO("done %s", res.toString().c_str());
-//            for( std::vector<int>::const_iterator i = path.begin(); i != path.end(); ++i)
-//                    std::cout << *i << ' ';
-//        }
-//        else{
-//            ROS_INFO("failed");
-//        }
-//        return 0;

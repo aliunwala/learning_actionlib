@@ -108,8 +108,7 @@ include_directories(
 
 ## Declare a cpp executable
 # add_executable(learning_actionlib_node src/learning_actionlib_node.cpp)
-add_executable(fibonacci src/fibonacci_server.cpp)
-add_executable(client src/fibonacci_client.cpp)
+
 add_executable(move_robot src/move_robot.cpp)
 
 ## Add cmake target dependencies of the executable/library
@@ -117,12 +116,6 @@ add_executable(move_robot src/move_robot.cpp)
 # add_dependencies(learning_actionlib_node learning_actionlib_generate_messages_cpp)
 
 ## Specify libraries to link a library or executable target against
- target_link_libraries(fibonacci
-   ${catkin_LIBRARIES}
- )
- target_link_libraries(client
-   ${catkin_LIBRARIES}
- )
  target_link_libraries(move_robot
    ${catkin_LIBRARIES}
  )

@@ -3,6 +3,7 @@
 #include <actionlib/client/terminal_state.h>
 #include <move_base_msgs/MoveBaseAction.h>
 #include <map_mux/ChangeMap.h>
+#include <geometry_msgs/PoseWithCovarianceStamped.h>
 
 int main(int argc, char ** argv){
     const float a = sqrt(2);
@@ -42,15 +43,35 @@ int main(int argc, char ** argv){
     outsideElevPoseFloor2.pose.orientation.z = -a;
     outsideElevPoseFloor2.pose.orientation.w = a;
 
+    geometry_msgs::PoseWithCovarianceStamped initalPositionFloor2;
+    initalPositionFloor2.header.seq = 0;
+    initalPositionFloor2.header.stamp.sec = 0;
+    initalPositionFloor2.header.stamp.nsec = 0;
+    initalPositionFloor2.header.frame_id = "map";
+    initalPositionFloor2.pose.pose.position.x = 12  ;
+    initalPositionFloor2.pose.pose.position.y = 12 ;
+    initalPositionFloor2.pose.pose.position.z = 0 ;
+    initalPositionFloor2.pose.pose.orientation.x = 0;
+    initalPositionFloor2.pose.pose.orientation.y = 0;
+    initalPositionFloor2.pose.pose.orientation.z = -a;
+    initalPositionFloor2.pose.pose.orientation.w = a;
+    initalPositionFloor2.pose.covariance = {};// {0.25, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.25, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.06853891945200942} ;
+
+
+
+
      ros::init( argc, argv, "move_robot");
      ros::NodeHandle n;
 
     boost::shared_ptr<actionlib::SimpleActionClient<move_base_msgs::MoveBaseAction> > robot_controller_;
+    ros::Publisher initialPosePub= n.advertise<geometry_msgs::PoseWithCovarianceStamped>("initialpose", 1000);
 
     ROS_INFO("wating");
     robot_controller_.reset(
     new actionlib::SimpleActionClient<move_base_msgs::MoveBaseAction>("move_base", true));
     robot_controller_->waitForServer();
+
+
 
    move_base_msgs::MoveBaseGoal goal;
    goal.target_pose = outsideElevPose;
@@ -71,10 +92,13 @@ int main(int argc, char ** argv){
         ROS_ERROR("service ChangeMap change_map failed");
     }
 
+// reset inital position after new map put into place
+    initialPosePub.publish(initalPositionFloor2);
+
 //give outside pose again
-   goal.target_pose = outsideElevPoseFloor2;
-   robot_controller_->sendGoal(goal);
-   robot_controller_->waitForResult();
+    goal.target_pose = outsideElevPoseFloor2;
+    robot_controller_->sendGoal(goal);
+    robot_controller_->waitForResult();
 
    //actionlib::SimpleClientGoalState state = robot_controller_->getState();
         return 0;

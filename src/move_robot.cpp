@@ -5,6 +5,7 @@
 #include <map_mux/ChangeMap.h>
 #include <geometry_msgs/PoseWithCovarianceStamped.h>
 #include <segbot_simulation_apps/DoorHandlerInterface.h>
+#include <segbot_gui/QuestionDialog.h>
 
 int main(int argc, char ** argv){
     const float a = sqrt(2);
@@ -75,10 +76,24 @@ int main(int argc, char ** argv){
         //ROS_ERROR("Failed the service");
     //}
 
+//------------------------------------
     ros::ServiceClient client = n.serviceClient<map_mux::ChangeMap>("change_map");
     map_mux::ChangeMap srv ;
+//------------------------------------
+
+//------------------------------------
+    ros::ServiceClient client_gui = n.serviceClient<segbot_gui::QuestionDialog >("question_dialog");
+    segbot_gui::QuestionDialog srv_gui ;
+    srv_gui.request.type = segbot_gui::QuestionDialog::Request::CHOICE_QUESTION;
+    srv_gui.request.message= "Have I arrived on floor 2?";
+    std::vector<std::string> list (1);
+    list[0] = "Yes we are on floor 2.";
+    srv_gui.request.options = list ; // we dont need yet
+    srv_gui.request.timeout= segbot_gui::QuestionDialog::Request::NO_TIMEOUT;
+//------------------------------------
 
 
+//------------------------------------
     boost::shared_ptr<actionlib::SimpleActionClient<move_base_msgs::MoveBaseAction> > robot_controller_;
     ros::Publisher initialPosePub= n.advertise<geometry_msgs::PoseWithCovarianceStamped>("initialpose", 1000);
 
@@ -97,13 +112,13 @@ int main(int argc, char ** argv){
    robot_controller_->sendGoal(goal);
    robot_controller_->waitForResult();
 // 1) Wait for user input as to what floor I am on
+// 1.5) Ask user if floor has changed:
+    if (client_gui.call(srv_gui)){}
+    else{ROS_ERROR("service gui_question failed");}
 // 2) switch map
     srv.request.data = 2;
-    if (client.call(srv)){
-    }
-    else{
-        ROS_ERROR("service ChangeMap change_map failed");
-    }
+    if (client.call(srv)){}
+    else{ROS_ERROR("service ChangeMap change_map failed");}
 
 // reset inital position after new map put into place
     initialPosePub.publish(initalPositionFloor2);

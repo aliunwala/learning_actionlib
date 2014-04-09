@@ -22,6 +22,9 @@
     <remap from="map" to="map3"/>
   </node>
 
+  <!-- launch the gui -->
+  <node name="segbot_gui" pkg="segbot_gui" type="question_dialog_plugin" />
+
   <node name="map_mux1" pkg="map_mux" type="main.py" /> 
   <node name="move_robot1" pkg="learning_actionlib" type="move_robot" />
 

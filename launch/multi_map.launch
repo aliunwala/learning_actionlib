@@ -4,8 +4,8 @@
   <!--<arg name="map_file2" default="/nishome/aunwala/Downloads/3ne-real-new.yaml" />-->
   <!--<arg name="map_file3" default="/nishome/aunwala/Downloads/3ne-real-new.yaml" />-->
 
-  <arg name="map_file2"  default="$(find map_mux)/maps/map_whole2_with_elevators.yaml" />
   <arg name="map_file1"  default="$(find map_mux)/maps/atrium_with_elevators.yaml" />
+  <arg name="map_file2"  default="$(find map_mux)/maps/atrium_with_elevators.yaml" />
   <arg name="map_file3"  default="$(find map_mux)/maps/map_whole2_with_elevators.yaml" />
   <!--<arg name="map_file2" default="/home/goatfigpc/catkin_ws/src/map_mux/maps/map11.yaml" />-->
   <!--<arg name="map_file3" default="/home/goatfigpc/catkin_ws/src/map_mux/maps/map11.yaml" />-->

@@ -108,6 +108,7 @@ int main(int argc, char ** argv){
 // reset inital position after new map put into place
     initialPosePub.publish(initalPositionFloor2);
 
+      ros::Duration(3).sleep();
 //give outside pose again
     goal.target_pose = outsideElevPoseFloor2;
     robot_controller_->sendGoal(goal);

@@ -106,11 +106,11 @@ int main(int argc, char ** argv){
    move_base_msgs::MoveBaseGoal goal;
    goal.target_pose = outsideElevPose;
    robot_controller_->sendGoal(goal);
-   robot_controller_->waitForResult();
+   robot_controller_->waitForResult(ros::Duration(0.0));
    goal.target_pose = insideElevPose;
    
    robot_controller_->sendGoal(goal);
-   robot_controller_->waitForResult();
+   robot_controller_->waitForResult(ros::Duration(0.0));
 // 1) Wait for user input as to what floor I am on
 // 1.5) Ask user if floor has changed:
     if (client_gui.call(srv_gui)){}
@@ -127,7 +127,7 @@ int main(int argc, char ** argv){
 //give outside pose again
     goal.target_pose = outsideElevPoseFloor2;
     robot_controller_->sendGoal(goal);
-    robot_controller_->waitForResult();
+   robot_controller_->waitForResult(ros::Duration(0.0));
 
    //actionlib::SimpleClientGoalState state = robot_controller_->getState();
         return 0;

@@ -5,8 +5,10 @@
   <!--<arg name="map_file3" default="/nishome/aunwala/Downloads/3ne-real-new.yaml" />-->
 
   <arg name="map_file1" default="/home/goatfigpc/catkin_ws/src/map_mux/maps/3ne-real-new.yaml" />
-  <arg name="map_file2" default="/home/goatfigpc/catkin_ws/src/map_mux/maps/map11.yaml" />
-  <arg name="map_file3" default="/home/goatfigpc/catkin_ws/src/map_mux/maps/map11.yaml" />
+  <arg name="map_file2" default="/home/goatfigpc/catkin_ws/src/map_mux/maps/3ne-real-new.yaml" />
+  <arg name="map_file3" default="/home/goatfigpc/catkin_ws/src/map_mux/maps/3ne-real-new.yaml" />
+  <!--<arg name="map_file2" default="/home/goatfigpc/catkin_ws/src/map_mux/maps/map11.yaml" />-->
+  <!--<arg name="map_file3" default="/home/goatfigpc/catkin_ws/src/map_mux/maps/map11.yaml" />-->
   
   <node name="map_server1" pkg="map_server" type="map_server" args="$(arg map_file1)"> 
     <remap from="map" to="map1"/>

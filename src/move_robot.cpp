@@ -4,6 +4,7 @@
 #include <move_base_msgs/MoveBaseAction.h>
 #include <map_mux/ChangeMap.h>
 #include <geometry_msgs/PoseWithCovarianceStamped.h>
+#include <segbot_simulation_apps/DoorHandlerInterface.h>
 
 int main(int argc, char ** argv){
     const float a = sqrt(2);
@@ -48,20 +49,34 @@ int main(int argc, char ** argv){
     initalPositionFloor2.header.stamp.sec = 0;
     initalPositionFloor2.header.stamp.nsec = 0;
     initalPositionFloor2.header.frame_id = "map";
-    initalPositionFloor2.pose.pose.position.x = 12  ;
-    initalPositionFloor2.pose.pose.position.y = 12 ;
+    initalPositionFloor2.pose.pose.position.x = 24.84  ;
+    initalPositionFloor2.pose.pose.position.y = 7.86;
     initalPositionFloor2.pose.pose.position.z = 0 ;
     initalPositionFloor2.pose.pose.orientation.x = 0;
     initalPositionFloor2.pose.pose.orientation.y = 0;
-    initalPositionFloor2.pose.pose.orientation.z = -a;
-    initalPositionFloor2.pose.pose.orientation.w = a;
+    initalPositionFloor2.pose.pose.orientation.z = 0.76631578005;
+    initalPositionFloor2.pose.pose.orientation.w = 0.642464104247;
     initalPositionFloor2.pose.covariance = {};// {0.25, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.25, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.06853891945200942} ;
 
 
 
 
-     ros::init( argc, argv, "move_robot");
-     ros::NodeHandle n;
+    ros::init( argc, argv, "move_robot");
+    ros::NodeHandle n;
+    ros::ServiceClient client_opendoors = n.serviceClient<segbot_simulation_apps::DoorHandlerInterface>("update_doors");
+    segbot_simulation_apps::DoorHandlerInterface open_door;
+    open_door.request.door = "" ;
+    open_door.request.open = true;
+    open_door.request.all_doors= true;
+    if (client_opendoors.call(open_door)){
+        ROS_INFO("running the service");
+    }
+    else{
+        ROS_ERROR("Failed the service");
+    }
+
+
+
 
     boost::shared_ptr<actionlib::SimpleActionClient<move_base_msgs::MoveBaseAction> > robot_controller_;
     ros::Publisher initialPosePub= n.advertise<geometry_msgs::PoseWithCovarianceStamped>("initialpose", 1000);
